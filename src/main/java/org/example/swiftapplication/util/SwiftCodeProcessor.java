@@ -305,7 +305,7 @@ public class SwiftCodeProcessor {
 
         PreparedStatement statement = connection.prepareStatement(sql);
 
-        int batchSize = 100; // Process records in batches for better performance
+        int batchSize = 100; 
         int count = 0;
         int totalProcessed = 0;
 
@@ -316,7 +316,7 @@ public class SwiftCodeProcessor {
             statement.setString(4, data.countryName);
             statement.setString(5, data.countryISO2);
             statement.setBoolean(6, data.isHeadquarter);
-            statement.setString(7, data.getBankIdentifier()); // Store the bank identifier for quick lookups
+            statement.setString(7, data.getBankIdentifier());
 
             statement.addBatch();
             count++;
@@ -358,14 +358,13 @@ public class SwiftCodeProcessor {
                     if (stringValue != null) {
                         stringValue = stringValue.trim();
                         // Debug if this might be an ISO2 code
-                        if (stringValue.length() > 2 && cell.getColumnIndex() == 4) {  // Adjust column index if needed
+                        if (stringValue.length() > 2 && cell.getColumnIndex() == 4) {
                             logger.fine("Found long ISO2 code: " + stringValue);
                         }
                         return stringValue;
                     }
                     return "";
                 case NUMERIC:
-                    // For numbers, convert to string without decimal if it's a whole number
                     double numValue = cell.getNumericCellValue();
                     if (numValue == Math.floor(numValue)) {
                         return String.valueOf((int) numValue);
@@ -375,7 +374,6 @@ public class SwiftCodeProcessor {
                 case BOOLEAN:
                     return String.valueOf(cell.getBooleanCellValue());
                 case FORMULA:
-                    // Try to get the result of the formula
                     try {
                         String formulaStringValue = cell.getStringCellValue();
                         if (formulaStringValue != null) {

@@ -35,30 +35,6 @@ public class SwiftCodeController {
         this.jdbcTemplate = jdbcTemplate;
         this.swiftCodeRowMapper = swiftCodeRowMapper;
     }
-    @GetMapping("/test-db")
-    public ResponseEntity<?> testDbConnection() {
-        try {
-            String sql = "SELECT COUNT(*) FROM swift_codes";
-            Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
-            return ResponseEntity.ok("Database connection successful. Found " + count + " SWIFT codes.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Database connection error: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/list")
-    public ResponseEntity<?> listSwiftCodes() {
-        try {
-            String sql = "SELECT swift_code FROM swift_codes LIMIT 50";
-            List<String> codes = jdbcTemplate.queryForList(sql, String.class);
-            return ResponseEntity.ok(codes);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Error: " + e.getMessage()));
-        }
-    }
-
 
 
     /**

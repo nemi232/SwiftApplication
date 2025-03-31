@@ -305,7 +305,7 @@ public class SwiftCodeProcessor {
 
         PreparedStatement statement = connection.prepareStatement(sql);
 
-        int batchSize = 100; 
+        int batchSize = 100;
         int count = 0;
         int totalProcessed = 0;
 

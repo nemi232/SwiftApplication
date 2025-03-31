@@ -12,6 +12,22 @@ A Spring Boot application for managing SWIFT/BIC codes. This application parses 
 
 ## API Endpoints
 
+### 0. Import Data (Utility Endpoint)
+
+**GET /import-data**
+
+Triggers the import process to parse SWIFT codes from the Excel file and store them in the database.
+
+Example:
+```
+GET http://localhost:8080/import-data
+```
+
+Response:
+```json
+"Successfully imported 1250 SWIFT codes"
+```
+
 ### 1. Get SWIFT Code Details
 
 **GET /v1/swift-codes/{swift-code}**
@@ -115,6 +131,11 @@ spring.datasource.password=your-password
 4. Import data (place Excel file in the project root):
    ```
    curl http://localhost:8080/import-data
+   ```
+   
+   Or visit the endpoint in your browser:
+   ```
+   http://localhost:8080/import-data
    ```
 
 ### Running with Docker

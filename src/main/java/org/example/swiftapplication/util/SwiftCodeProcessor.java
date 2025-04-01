@@ -113,7 +113,6 @@ public class SwiftCodeProcessor {
             // Store country data in uppercase as per requirements
             this.countryName = countryName != null ? countryName.toUpperCase() : "";
 
-            // Ensure country ISO2 is exactly 2 characters
             if (countryISO2 != null) {
                 if (countryISO2.length() > 2) {
                     this.countryISO2 = countryISO2.substring(0, 2).toUpperCase();
@@ -129,7 +128,7 @@ public class SwiftCodeProcessor {
             this.isHeadquarter = isHeadquarter;
         }
 
-        // Get the first 8 characters to identify bank headquarters-branch relationship
+        // Get the first 8 characters
         public String getBankIdentifier() {
             if (swiftCode != null && swiftCode.length() >= 8) {
                 return swiftCode.substring(0, 8);
@@ -215,12 +214,6 @@ public class SwiftCodeProcessor {
             rowCount++;
 
             try {
-                // Adjusted column mapping based on observed data pattern
-                // Column 0: Country code (e.g., AL, AW)
-                // Column 1: SWIFT code (e.g., PYALALT2XXX, BDCCAWAWXXX)
-                // Column 2: Address (e.g., BIC11)
-                // Column 3: Bank Name (e.g., PAYSERA ALBANIA, BANCO DI CARIBE (ARUBA) N.V)
-                // Column 4: Country ISO2 (e.g., PA, VO)
 
                 String countryName = getCellValueAsString(row.getCell(6));
                 String swiftCode = getCellValueAsString(row.getCell(1));
@@ -228,10 +221,7 @@ public class SwiftCodeProcessor {
                 String bankName = getCellValueAsString(row.getCell(3));
                 String countryISO2 = getCellValueAsString(row.getCell(0));
 
-                // Use the country code as country name if no separate country name column exists
-                // You might need to adjust this logic based on your actual data
-
-                // Debug output for the first few rows
+                // Debug output
                 if (rowCount <= 5) {
                     logger.info("Row " + rowCount + ": Country=" + countryName +
                             ", Swift=" + swiftCode +
@@ -247,20 +237,15 @@ public class SwiftCodeProcessor {
                     continue;
                 }
 
-                // Ensure country ISO2 is valid
                 if (countryISO2 == null || countryISO2.isEmpty()) {
                     if (countryName != null && !countryName.isEmpty() && countryName.length() <= 2) {
-                        // Use country code as ISO2 if it's suitable
                         countryISO2 = countryName;
                     } else {
-                        // Set a placeholder
                         countryISO2 = "XX";
                         logger.warning("Using placeholder ISO2 code for row " + rowCount);
                     }
                 }
 
-                // Apply the code identification rule:
-                // Codes ending with XXX represent headquarters, otherwise branches
                 boolean isHeadquarter = swiftCode.endsWith("XXX");
 
                 SwiftCodeData swiftCodeData = new SwiftCodeData(
@@ -278,7 +263,6 @@ public class SwiftCodeProcessor {
             }
         }
 
-        // Close resources
         fileInputStream.close();
         workbook.close();
 
@@ -290,7 +274,6 @@ public class SwiftCodeProcessor {
      * Stores the parsed data in the database
      */
     private int storeDataInDatabase(Connection connection, List<SwiftCodeData> swiftCodesData) throws Exception {
-        // Disable auto-commit for better performance with batch operations
         connection.setAutoCommit(false);
 
         String sql = "INSERT INTO swift_codes (swift_code, bank_name, address, country_name, country_iso2, is_headquarter, bank_identifier) " +
@@ -331,7 +314,6 @@ public class SwiftCodeProcessor {
             }
         }
 
-        // Execute any remaining records in the batch
         if (count > 0) {
             statement.executeBatch();
             connection.commit();

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.logging.Logger;
 
 /**
- * Controller for manually triggering data import
+ * Controller for manually triggering data importer
  */
 @RestController
 public class DataImportController {

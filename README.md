@@ -49,7 +49,7 @@ GET http://localhost:8080/import-data
 
 Response:
 ```json
-"Successfully imported 1250 SWIFT codes"
+"Successfully imported 1061 SWIFT codes"
 ```
 
 ### 1. Get SWIFT Code Details

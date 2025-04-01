@@ -1,7 +1,4 @@
 # SWIFT Codes API
-
-A Spring Boot application for managing SWIFT/BIC codes. This application parses SWIFT codes data from an Excel file, stores it in a MySQL database, and provides RESTful API endpoints for accessing and managing the data.
-
 ## Features
 
 - Parses SWIFT codes from Excel file
@@ -9,6 +6,33 @@ A Spring Boot application for managing SWIFT/BIC codes. This application parses 
 - Stores data in a relational database with optimized query performance
 - Exposes RESTful API endpoints for data access and management
 - Containerized for easy deployment
+
+## Quick Start with Docker
+
+The easiest way to run this application is using Docker. This approach requires no local Java, Maven, or MySQL installation.
+
+### Prerequisites
+- Docker and Docker Compose
+- Excel file with SWIFT codes (named `Interns_2025_SWIFT_CODES.xlsx`)
+
+### Running the Application
+
+1. Clone the repository
+2. Place your `Interns_2025_SWIFT_CODES.xlsx` file in the project root directory
+3. Run using Docker Compose:
+   ```
+   docker-compose up
+   ```
+4. Import data by accessing:
+   ```
+   http://localhost:8080/import-data
+   ```
+5. The application is now running at `http://localhost:8080`
+
+To stop the application:
+```
+docker-compose down
+```
 
 ## API Endpoints
 
@@ -102,56 +126,15 @@ Request body:
 
 Deletes a SWIFT code from the database.
 
-## Setup and Installation
+## Docker Compose Configuration
 
-### Prerequisites
-- Java 17 or later
-- Maven
-- MySQL 8.0 or later
-- Docker (optional, for containerized deployment)
+The application uses Docker Compose to set up both the API service and the MySQL database. Key configuration settings:
 
-### Database Configuration
-Update the database configuration in `src/main/resources/application.properties`:
-```
-spring.datasource.url=jdbc:mysql://localhost:3306/swift_codes_db?createDatabaseIfNotExist=true
-spring.datasource.username=your-username
-spring.datasource.password=your-password
-```
+- MySQL database configured with an empty root password
+- Database name: `swift_codes_db`
+- API server accessible on port 8080
+- Excel file mounted as a volume to make it accessible to the container
 
-### Running the Application
-1. Clone the repository
-2. Build the application:
-   ```
-   mvn clean package
-   ```
-3. Run the application:
-   ```
-   mvn spring-boot:run
-   ```
-4. Import data (place Excel file in the project root):
-   ```
-   curl http://localhost:8080/import-data
-   ```
-   
-   Or visit the endpoint in your browser:
-   ```
-   http://localhost:8080/import-data
-   ```
-
-### Running with Docker
-1. Build the Docker image:
-   ```
-   docker build -t swift-codes-api .
-   ```
-2. Run the container:
-   ```
-   docker run -p 8080:8080 swift-codes-api
-   ```
-
-Or use Docker Compose:
-```
-docker-compose up -d
-```
 
 ## Project Structure
 - `SwiftCodeProcessor`: Parses Excel file and stores data in database
